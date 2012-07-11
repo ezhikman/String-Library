@@ -1,1 +1,67 @@
-hello
+
+#include<iostream>
+#include<vector>
+#include"RefCounting.h"
+#pragma once
+
+class String 
+{
+  char* str;
+	RefCounting refcount;
+public:
+
+	String();
+	String(String&);
+	String(char*);
+	String(char ch);
+
+	int Size();
+
+	friend String& operator+(const String&,const String&);
+
+	String& operator+=(const String&);
+	String& operator=(const String&);
+
+	friend bool operator==(const String&,const String&);
+	friend bool operator!=(const String&,const String&);
+	friend bool operator<=(const String&,const String&);
+	friend bool operator>=(const String&,const String&);
+	friend bool operator<(const String&,const String&);
+	friend bool operator>(const String&,const String&);
+
+	friend std::ostream& operator<<(std::ostream&,const String&);
+	friend std::istream& operator>>(std::istream&,const String&);
+	
+	char operator[](int) const;
+	char* c_str();
+	
+	void AddRef(String*);
+	void AllocString();
+
+	~String();
+};
+
+#endif
+
+//это класс для подсчёта ссылок, он если что у меня в другом .h файле лежит
+#ifndef REF_COUNTING_H
+#define REF_COUNTING_H
+
+#include<vector>
+
+#pragma once
+
+class String;
+
+class RefCounting
+{
+  std::vector<String*> list;
+public:
+
+	void Notify();
+	void Add(String* string);
+
+	~RefCounting();
+};
+
+#endif
